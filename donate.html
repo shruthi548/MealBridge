@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MealBridge - Donate Food</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%); }
+        
+        .navbar-glass {
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(12px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            padding: 0.8rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .brand {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #2ecc71, #27ae60, #1abc9c);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .brand i { background: none; color: #2ecc71; }
+        
+        .nav-link-modern {
+            font-weight: 600;
+            padding: 0.6rem 1.2rem;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            color: #2c3e50;
+            margin: 0 0.2rem;
+        }
+        
+        .nav-link-modern:hover {
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            color: white !important;
+            transform: translateY(-2px);
+        }
+        
+        .donate-form-container {
+            background: white;
+            border-radius: 32px;
+            padding: 2rem;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            margin: 2rem 0;
+        }
+        
+        .form-control, .form-select {
+            border-radius: 16px;
+            padding: 0.8rem 1rem;
+            border: 2px solid #e0e4e8;
+            transition: all 0.3s ease;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            border-color: #2ecc71;
+            box-shadow: 0 0 0 3px rgba(46,204,113,0.2);
+        }
+        
+        .btn-donate {
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            border: none;
+            padding: 1rem;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+        
+        .btn-donate:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 20px rgba(46,204,113,0.4);
+        }
+        
+        .info-card {
+            background: linear-gradient(135deg, #e8f5e9, #c8e6d9);
+            border-radius: 24px;
+            padding: 1.5rem;
+            margin-top: 1rem;
+        }
+        
+        footer {
+            background: #1a1a2e;
+            color: white;
+            padding: 2rem;
+            margin-top: 3rem;
+            text-align: center;
+        }
+        
+        @media (max-width: 768px) {
+            .donate-form-container { padding: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-glass">
+        <div class="container-fluid">
+            <a class="navbar-brand brand" href="index.html"><i class="fas fa-hand-holding-heart"></i> MealBridge</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link nav-link-modern" href="index.html"><i class="fas fa-home"></i> Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link nav-link-modern" href="donate.html"><i class="fas fa-donate"></i> Donate</a></li>
+                    <li class="nav-item"><a class="nav-link nav-link-modern" href="request.html"><i class="fas fa-clipboard-list"></i> Request</a></li>
+                    <li class="nav-item"><a class="nav-link nav-link-modern" href="my-donation.html"><i class="fas fa-box"></i> My Donations</a></li>
+                    <li class="nav-item"><a class="nav-link nav-link-modern" href="impact.html"><i class="fas fa-chart-line"></i> Impact Hub</a></li>
+                    <li class="nav-item"><a class="nav-link nav-link-modern" href="education.html"><i class="fas fa-graduation-cap"></i> Learn</a></li>
+                    <li class="nav-item"><a class="nav-link nav-link-modern active" href="contact.html"><i class="fas fa-envelope"></i> Contact</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <div class="donate-form-container">
+                    <div class="text-center mb-4">
+                        <i class="fas fa-donate fa-3x" style="color: #2ecc71;"></i>
+                        <h2 class="mt-2">Make a Food Donation</h2>
+                        <p class="text-muted">Your contribution can feed families in need</p>
+                    </div>
+                    
+                    <form id="donationForm">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold"><i class="fas fa-user"></i> Your Name *</label>
+                                <input type="text" class="form-control" id="donorName" required placeholder="Enter your full name">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold"><i class="fas fa-envelope"></i> Email *</label>
+                                <input type="email" class="form-control" id="donorEmail" required placeholder="your@email.com">
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold"><i class="fas fa-utensils"></i> Food Item *</label>
+                                <input type="text" class="form-control" id="foodItem" required placeholder="e.g., Rice, Vegetables, Bread">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold"><i class="fas fa-balance-scale"></i> Quantity *</label>
+                                <input type="text" class="form-control" id="quantity" required placeholder="e.g., 5kg, 10 meals">
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold"><i class="fas fa-calendar"></i> Expiry Date</label>
+                                <input type="date" class="form-control" id="expiryDate">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold"><i class="fas fa-map-marker-alt"></i> Pickup Location *</label>
+                                <input type="text" class="form-control" id="location" required placeholder="Address or area">
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label fw-bold"><i class="fas fa-align-left"></i> Additional Notes</label>
+                            <textarea class="form-control" id="notes" rows="3" placeholder="Any special instructions..."></textarea>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-donate text-white"><i class="fas fa-hand-holding-heart"></i> Submit Donation</button>
+                    </form>
+                    
+                    <div class="info-card mt-4">
+                        <h5><i class="fas fa-info-circle"></i> Why Donate?</h5>
+                        <p class="mb-0">Every meal donated helps reduce food waste and fight hunger. Your donation will be visible to people in need and community organizations.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2026 MealBridge | Together Against Hunger & Food Waste</p>
+    </footer>
+
+    <script>
+        function addActivity(action, details, user) {
+            const activities = JSON.parse(localStorage.getItem('activities') || '[]');
+            activities.unshift({
+                timestamp: new Date().toISOString(),
+                action: action,
+                details: details,
+                user: user,
+                icon: '🍽️'
+            });
+            localStorage.setItem('activities', JSON.stringify(activities.slice(0, 50)));
+        }
+        
+        document.getElementById('donationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const donation = {
+                id: Date.now(),
+                donorName: document.getElementById('donorName').value,
+                donorEmail: document.getElementById('donorEmail').value,
+                foodItem: document.getElementById('foodItem').value,
+                quantity: document.getElementById('quantity').value,
+                expiryDate: document.getElementById('expiryDate').value,
+                location: document.getElementById('location').value,
+                notes: document.getElementById('notes').value,
+                status: 'active',
+                timestamp: new Date().toISOString(),
+                peopleCount: Math.floor(Math.random() * 20) + 5,
+                wasteKg: Math.floor(Math.random() * 10) + 1
+            };
+            
+            const donations = JSON.parse(localStorage.getItem('donations') || '[]');
+            donations.push(donation);
+            localStorage.setItem('donations', JSON.stringify(donations));
+            
+            addActivity('donated', `${donation.quantity} of ${donation.foodItem}`, donation.donorName);
+            
+            alert('✅ Donation submitted successfully! Your food will appear in the marketplace.');
+            window.location.href = 'my-donation.html';
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

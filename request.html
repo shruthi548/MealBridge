@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MealBridge - Request Food</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%); }
+        .navbar-glass { background: rgba(255, 255, 255, 0.96); backdrop-filter: blur(12px); box-shadow: 0 4px 20px rgba(0,0,0,0.08); padding: 0.8rem 2rem; position: sticky; top: 0; z-index: 1000; }
+        .brand { font-size: 1.8rem; font-weight: 800; background: linear-gradient(135deg, #2ecc71, #27ae60, #1abc9c); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        .brand i { background: none; color: #2ecc71; }
+        .nav-link-modern { font-weight: 600; padding: 0.6rem 1.2rem; border-radius: 50px; transition: all 0.3s ease; color: #2c3e50; margin: 0 0.2rem; text-decoration: none; display: inline-block; }
+        .nav-link-modern:hover { background: linear-gradient(135deg, #2ecc71, #27ae60); color: white !important; transform: translateY(-2px); }
+        .food-card { background: white; border-radius: 24px; overflow: hidden; transition: all 0.4s ease; box-shadow: 0 10px 25px rgba(0,0,0,0.08); height: 100%; }
+        .food-card:hover { transform: translateY(-8px); box-shadow: 0 20px 35px rgba(46,204,113,0.15); }
+        .food-card-body { padding: 1.5rem; }
+        .badge-status { background: #2ecc71; color: white; padding: 0.3rem 0.8rem; border-radius: 50px; font-size: 0.75rem; font-weight: 600; }
+        .badge-claimed { background: #3498db; color: white; padding: 0.3rem 0.8rem; border-radius: 50px; font-size: 0.75rem; font-weight: 600; }
+        .badge-purchased { background: #e67e22; color: white; padding: 0.3rem 0.8rem; border-radius: 50px; font-size: 0.75rem; font-weight: 600; }
+        .btn-request, .btn-purchase { border-radius: 50px; padding: 0.5rem 1.2rem; font-weight: 600; transition: all 0.3s ease; }
+        .btn-request { background: linear-gradient(135deg, #3498db, #2980b9); border: none; color: white; }
+        .btn-purchase { background: linear-gradient(135deg, #e67e22, #d35400); border: none; color: white; }
+        .btn-request:hover, .btn-purchase:hover { transform: scale(1.05); }
+        .request-form-container { background: white; border-radius: 28px; padding: 1.5rem; margin-bottom: 2rem; box-shadow: 0 10px 30px rgba(0,0,0,0.08); }
+        .form-control, .form-select { border-radius: 14px; padding: 0.7rem 1rem; }
+        .status-tabs { display: flex; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+        .status-tab { padding: 0.5rem 1.5rem; border-radius: 50px; cursor: pointer; transition: all 0.3s ease; background: #e0e4e8; color: #2c3e50; font-weight: 600; }
+        .status-tab.active { background: #2ecc71; color: white; }
+        footer { background: #1a1a2e; color: white; padding: 2rem; margin-top: 3rem; text-align: center; }
+        @media (max-width: 768px) { .food-card-body { padding: 1rem; } .navbar-glass { padding: 0.5rem 1rem; } }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-glass">
+        <div class="container-fluid">
+            <a class="navbar-brand brand" href="index.html"><i class="fas fa-hand-holding-heart"></i> MealBridge</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link nav-link-modern" href="index.html"><i class="fas fa-home"></i> Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link nav-link-modern" href="donate.html"><i class="fas fa-donate"></i> Donate</a></li>
+                    <li class="nav-item"><a class="nav-link nav-link-modern" href="request.html"><i class="fas fa-clipboard-list"></i> Request</a></li>
+                    <li class="nav-item"><a class="nav-link nav-link-modern" href="my-donation.html"><i class="fas fa-box"></i> My Donations</a></li>
+                    <li class="nav-item"><a class="nav-link nav-link-modern" href="impact.html"><i class="fas fa-chart-line"></i> Impact Hub</a></li>
+                    <li class="nav-item"><a class="nav-link nav-link-modern" href="education.html"><i class="fas fa-graduation-cap"></i> Learn</a></li>
+                    <li class="nav-item"><a class="nav-link nav-link-modern active" href="contact.html"><i class="fas fa-envelope"></i> Contact</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container mt-4">
+        <div class="request-form-container">
+            <h3 class="mb-3"><i class="fas fa-clipboard-list"></i> Request Food</h3>
+            <form id="requestForm">
+                <div class="row"><div class="col-md-4 mb-2"><input type="text" class="form-control" id="requesterName" placeholder="Your Name *" required></div>
+                <div class="col-md-4 mb-2"><input type="text" class="form-control" id="requestFood" placeholder="Food needed *" required></div>
+                <div class="col-md-4 mb-2"><input type="text" class="form-control" id="requestQuantity" placeholder="Quantity *" required></div></div>
+                <div class="row"><div class="col-md-8 mb-2"><input type="text" class="form-control" id="requestLocation" placeholder="Location" required></div>
+                <div class="col-md-4 mb-2"><select class="form-select" id="urgency"><option value="normal">Normal Urgency</option><option value="high">High Urgency</option><option value="critical">Critical</option></select></div></div>
+                <button type="submit" class="btn btn-request mt-2"><i class="fas fa-paper-plane"></i> Submit Request</button>
+            </form>
+        </div>
+        <h3 class="mb-3"><i class="fas fa-store"></i> Available Food Items</h3>
+        <div class="status-tabs"><div class="status-tab active" data-status="all">All Items</div><div class="status-tab" data-status="active">Available</div><div class="status-tab" data-status="claimed">Claimed</div><div class="status-tab" data-status="purchased">Purchased</div></div>
+        <div class="row g-4" id="availableFoodsList"></div>
+    </div>
+    <footer><p>© 2026 MealBridge | Together Against Hunger & Food Waste</p></footer>
+    <script>
+        var currentFilter = 'all';
+        
+        // Initialize storage
+        if (!localStorage.getItem('donations')) localStorage.setItem('donations', JSON.stringify([]));
+        if (!localStorage.getItem('requests')) localStorage.setItem('requests', JSON.stringify([]));
+        if (!localStorage.getItem('purchases')) localStorage.setItem('purchases', JSON.stringify([]));
+        if (!localStorage.getItem('activities')) localStorage.setItem('activities', JSON.stringify([]));
+        
+        // Escape HTML
+        function escapeHtml(text)
+        {
+            if (!text) return '';
+            return text.replace(/[&<>]/g, function(m) {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                return m;
+            });
+        }
+        
+        // Add activity
+        function addActivity(action, details, user, icon)
+        {
+            var activities = JSON.parse(localStorage.getItem('activities'));
+            var newActivity = {
+                timestamp: new Date().toISOString(),
+                action: action,
+                details: details,
+                user: user,
+                icon: icon || '📋'
+            };
+            activities.unshift(newActivity);
+            if (activities.length > 50) activities = activities.slice(0, 50);
+            localStorage.setItem('activities', JSON.stringify(activities));
+        }
+        
+        // Load food items
+        function loadFoods()
+        {
+            var donations = JSON.parse(localStorage.getItem('donations'));
+            var filtered = [];
+            
+            if (currentFilter === 'all')
+            {
+                filtered = donations;
+            }
+            else
+            {
+                for (var i = 0; i < donations.length; i++)
+                {
+                    if (donations[i].status === currentFilter)
+                    {
+                        filtered.push(donations[i]);
+                    }
+                }
+            }
+            
+            var container = document.getElementById('availableFoodsList');
+            
+            if (filtered.length === 0)
+            {
+                container.innerHTML = '<div class="col-12 text-center py-5"><i class="fas fa-box-open fa-3x text-muted"></i><p class="mt-3">No food items found in this category.</p></div>';
+                return;
+            }
+            
+            var html = '';
+            for (var j = 0; j < filtered.length; j++)
+            {
+                var d = filtered[j];
+                var badge = '';
+                var buttons = '';
+                
+                if (d.status === 'active')
+                {
+                    badge = '<span class="badge-status"><i class="fas fa-check-circle"></i> Available</span>';
+                    buttons = '<div class="d-flex gap-2 mt-3">' +
+                        '<button class="btn btn-request btn-sm flex-grow-1" onclick="claimFood(' + d.id + ', \'' + escapeHtml(d.foodItem) + '\', \'' + escapeHtml(d.donorName) + '\')">' +
+                        '<i class="fas fa-hand-holding-heart"></i> Request & Claim</button>' +
+                        '<button class="btn btn-purchase btn-sm flex-grow-1" onclick="purchaseFood(' + d.id + ', \'' + escapeHtml(d.foodItem) + '\', \'' + escapeHtml(d.donorName) + '\', \'' + escapeHtml(d.quantity) + '\')">' +
+                        '<i class="fas fa-shopping-cart"></i> Purchase ($5)</button></div>';
+                }
+                else if (d.status === 'claimed')
+                {
+                    badge = '<span class="badge-claimed"><i class="fas fa-hand-holding-heart"></i> Claimed</span>';
+                    buttons = '<div class="mt-3 text-center"><small class="text-muted">This item has been claimed</small></div>';
+                }
+                else
+                {
+                    badge = '<span class="badge-purchased"><i class="fas fa-shopping-cart"></i> Purchased</span>';
+                    buttons = '<div class="mt-3 text-center"><small class="text-muted">This item has been purchased</small></div>';
+                }
+                
+                html = html + '<div class="col-md-6 col-lg-4"><div class="food-card"><div class="food-card-body">' +
+                    '<div class="d-flex justify-content-between align-items-start mb-2">' +
+                    '<h5 class="fw-bold mb-0">' + escapeHtml(d.foodItem) + '</h5>' + badge + '</div>' +
+                    '<p class="text-muted small">by ' + escapeHtml(d.donorName) + '</p>' +
+                    '<div class="mb-2">' +
+                    '<i class="fas fa-balance-scale"></i> ' + escapeHtml(d.quantity) + '<br>' +
+                    '<i class="fas fa-map-marker-alt"></i> ' + escapeHtml(d.location) + '<br>' +
+                    (d.expiryDate ? '<i class="fas fa-calendar"></i> Expires: ' + d.expiryDate : '') +
+                    '</div>' + buttons + '</div></div></div>';
+            }
+            container.innerHTML = html;
+        }
+        
+        // Claim food function
+        function claimFood(donationId, foodName, donorName)
+        {
+            var requesterName = prompt("Enter your name to request and claim this food:");
+            if (!requesterName) return;
+            
+            var requests = JSON.parse(localStorage.getItem('requests'));
+            requests.push({
+                id: Date.now(),
+                donationId: donationId,
+                foodName: foodName,
+                requesterName: requesterName,
+                donorName: donorName,
+                status: 'pending',
+                type: 'request',
+                timestamp: new Date().toISOString()
+            });
+            localStorage.setItem('requests', JSON.stringify(requests));
+            
+            var donations = JSON.parse(localStorage.getItem('donations'));
+            for (var i = 0; i < donations.length; i++)
+            {
+                if (donations[i].id === donationId)
+                {
+                    donations[i].status = 'claimed';
+                    donations[i].claimedBy = requesterName;
+                    donations[i].claimedAt = new Date().toISOString();
+                    break;
+                }
+            }
+            localStorage.setItem('donations', JSON.stringify(donations));
+            
+            addActivity('claimed', foodName + ' from ' + donorName, requesterName, '🤝');
+            alert('✅ Success! You have claimed ' + foodName + '. The donor will contact you for pickup.');
+            loadFoods();
+        }
+        
+        // Purchase food function
+        function purchaseFood(donationId, foodName, donorName, quantity)
+        {
+            var buyerName = prompt("Enter your name to purchase this food:");
+            if (!buyerName) return;
+            
+            var purchases = JSON.parse(localStorage.getItem('purchases'));
+            purchases.push({
+                id: Date.now(),
+                donationId: donationId,
+                foodName: foodName,
+                quantity: quantity,
+                buyerName: buyerName,
+                donorName: donorName,
+                amount: 5,
+                timestamp: new Date().toISOString(),
+                status: 'completed'
+            });
+            localStorage.setItem('purchases', JSON.stringify(purchases));
+            
+            var donations = JSON.parse(localStorage.getItem('donations'));
+            for (var i = 0; i < donations.length; i++)
+            {
+                if (donations[i].id === donationId)
+                {
+                    donations[i].status = 'purchased';
+                    donations[i].purchasedBy = buyerName;
+                    donations[i].purchasedAt = new Date().toISOString();
+                    break;
+                }
+            }
+            localStorage.setItem('donations', JSON.stringify(donations));
+            
+            addActivity('purchased', foodName + ' ($5) from ' + donorName, buyerName, '💰');
+            alert('✅ Purchase successful! You bought ' + foodName + ' for $5. Thank you for supporting!');
+            loadFoods();
+        }
+        
+        // Submit custom request
+        document.getElementById('requestForm').addEventListener('submit', function(e)
+        {
+            e.preventDefault();
+            
+            var newRequest = {
+                id: Date.now(),
+                donationId: null,
+                foodName: document.getElementById('requestFood').value,
+                quantity: document.getElementById('requestQuantity').value,
+                requesterName: document.getElementById('requesterName').value,
+                location: document.getElementById('requestLocation').value,
+                urgency: document.getElementById('urgency').value,
+                status: 'pending',
+                type: 'custom_request',
+                timestamp: new Date().toISOString()
+            };
+            
+            var requests = JSON.parse(localStorage.getItem('requests'));
+            requests.push(newRequest);
+            localStorage.setItem('requests', JSON.stringify(requests));
+            
+            addActivity('requested', newRequest.quantity + ' of ' + newRequest.foodName + ' (custom request)', newRequest.requesterName, '📋');
+            
+            alert('✅ Your food request has been submitted! We will notify you when food becomes available.');
+            document.getElementById('requestForm').reset();
+        });
+        
+        // Set up filter tabs
+        var tabs = document.querySelectorAll('.status-tab');
+        for (var t = 0; t < tabs.length; t++)
+        {
+            tabs[t].addEventListener('click', function()
+            {
+                for (var i = 0; i < tabs.length; i++)
+                {
+                    tabs[i].classList.remove('active');
+                }
+                this.classList.add('active');
+                currentFilter = this.getAttribute('data-status');
+                loadFoods();
+            });
+        }
+        
+        // Add sample data if empty
+        var donations = JSON.parse(localStorage.getItem('donations'));
+        if (donations.length === 0)
+        {
+            donations.push({
+                id: Date.now() + 1,
+                donorName: "Sarah Johnson",
+                donorEmail: "sarah@example.com",
+                foodItem: "Fresh Vegetables",
+                quantity: "10 kg",
+                location: "Downtown Community Center",
+                status: "active",
+                timestamp: new Date().toISOString(),
+                peopleCount: 15,
+                wasteKg: 5
+            });
+            donations.push({
+                id: Date.now() + 2,
+                donorName: "Michael Chen",
+                donorEmail: "michael@example.com",
+                foodItem: "Rice and Beans",
+                quantity: "25 meals",
+                location: "Eastside Food Bank",
+                status: "active",
+                timestamp: new Date().toISOString(),
+                peopleCount: 25,
+                wasteKg: 8
+            });
+            localStorage.setItem('donations', JSON.stringify(donations));
+        }
+        
+        loadFoods();
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
